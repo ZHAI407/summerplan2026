@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夏日保卫战 · 2026暑期</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+// ─── FIREBASE ────────────────────────────────────────────────────────────────
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBOGSwnudzX9PY8cygSA7X6fDQOi7zGxjU",
+  authDomain: "superhuman-2636.firebaseapp.com",
+  databaseURL: "https://superhuman-2636-default-rtdb.firebaseio.com",
+  projectId: "superhuman-2636",
+  storageBucket: "superhuman-2636.firebasestorage.app",
+  messagingSenderId: "783984103051",
+  appId: "1:783984103051:web:98a56238cdb040b09d8e8e"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const DB_PATH = 'summer2026';
+
+<style>
+:root {
+  --p:#6B4EFF;--p2:#8B72FF;--p3:#EEE9FF;--p4:#F7F5FF;
+  --gold:#C8A84B;--red:#D4522A;--green:#0E9B6E;--blue:#1466A8;
+  --cat-study:#5B4AE8;--cat-research:#0E9B6E;--cat-health:#D4522A;
+  --bg:#FAF9FE;--surface:#fff;--border:rgba(107,78,255,.13);--border2:rgba(107,78,255,.22);
+  --text:#1A1625;--muted:#7B7490;--light:#B8B0D4;
+  --serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(ellipse 60% 40% at 80% 10%,rgba(107,78,255,.06) 0%,transparent 70%),
+  radial-gradient(ellipse 40% 30% at 10% 80%,rgba(200,168,75,.05) 0%,transparent 60%);
+  pointer-events:none;z-index:0;}
+
+/* ── BANNER ── */
+.manifesto{width:100%;overflow:hidden;background:var(--text);padding:10px 0;}
+.manifesto-track{display:flex;animation:scroll-banner 22s linear infinite;white-space:nowrap;}
+.manifesto-track:hover{animation-play-state:paused;}
+.manifesto-item{display:inline-flex;align-items:center;gap:10px;padding:0 28px;flex-shrink:0;
+  font-family:var(--serif);font-style:italic;font-size:16px;color:#fff;}
+.manifesto-item .mnum{font-family:var(--sans);font-style:normal;font-size:20px;font-weight:600;}
+.mnum.f4{color:#A8B4FF;}.mnum.f5{color:#7DDFC3;}.mnum.f6{color:#FFD966;}.mnum.f8{color:#FF8B6B;}
+.msep{color:rgba(255,255,255,.2);font-size:12px;}
+@keyframes scroll-banner{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1100px;margin:0 auto;padding:0 1.5rem 5rem;position:relative;z-index:1;}
+
+/* ── HEADER ── */
+header{text-align:center;padding:2.5rem 0 1.5rem;}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--p);
+  display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:.6rem;}
+.eyebrow::before,.eyebrow::after{content:'';flex:1;max-width:60px;height:.5px;background:var(--border2);}
+header h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.8rem);font-weight:400;line-height:1.1;margin-bottom:.4rem;}
+header h1 em{color:var(--p);font-style:italic;}
+.header-sub{font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.date-range{display:inline-block;margin-top:.6rem;font-size:13px;color:var(--muted);
+  border:0.5px solid var(--border2);border-radius:20px;padding:4px 14px;}
+
+/* ── USER SWITCHER ── */
+.user-bar{display:flex;gap:10px;justify-content:center;margin:1.2rem 0 1.8rem;flex-wrap:wrap;}
+.user-btn{display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:24px;
+  border:1.5px solid var(--border2);background:var(--surface);cursor:pointer;
+  font-family:var(--sans);font-size:13px;color:var(--muted);transition:all .15s;}
+.user-btn:hover{border-color:var(--p);color:var(--p);}
+.user-btn.active{background:var(--p);color:#fff;border-color:var(--p);}
+.user-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:12px;background:rgba(255,255,255,.25);}
+.vs-badge{font-size:11px;color:var(--muted);align-self:center;font-weight:500;padding:0 4px;}
+
+/* ── DUEL PANEL ── */
+.duel-card{background:var(--surface);border:0.5px solid var(--border);border-radius:20px;
+  padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:grid;
+  grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;}
+.duel-side{display:flex;flex-direction:column;gap:4px;}
+.duel-side.right{text-align:right;}
+.duel-name{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.duel-xp{font-family:var(--serif);font-size:28px;color:var(--p);}
+.duel-sub{font-size:11px;color:var(--muted);}
+.duel-vs{text-align:center;}
+.duel-vs-txt{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--light);}
+.duel-bar-wrap{grid-column:1/-1;display:flex;align-items:center;gap:8px;}
+.duel-bar-bg{flex:1;height:8px;background:var(--p4);border-radius:4px;overflow:hidden;}
+.duel-bar-a{height:100%;border-radius:4px;background:var(--p);transition:width .5s ease;}
+.duel-bar-b{width:100%;height:100%;border-radius:4px;background:#FF8B6B;
+  transform-origin:right;transition:transform .5s ease;}
+.duel-bar-b-wrap{flex:1;height:8px;background:var(--p4);border-radius:4px;overflow:hidden;}
+
+/* ── SUMMARY RINGS ── */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+@media(max-width:600px){.summary-grid{grid-template-columns:repeat(2,1fr);}}
+.scard{background:var(--surface);border:0.5px solid var(--border);border-radius:18px;
+  padding:1.1rem 1rem;text-align:center;transition:box-shadow .2s;}
+.scard:hover{box-shadow:0 4px 24px rgba(107,78,255,.08);}
+.ring-wrap{position:relative;width:68px;height:68px;margin:0 auto 8px;}
+.ring-wrap canvas{width:68px;height:68px;}
+.ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:14px;font-weight:500;color:var(--text);}
+.scard-label{font-size:12px;color:var(--muted);}
+
+/* ── MONTH TABS ── */
+.month-tabs{display:flex;gap:8px;margin-bottom:1rem;}
+.mtab{padding:7px 20px;border-radius:24px;font-size:13px;border:0.5px solid var(--border2);
+  background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans);}
+.mtab:hover{border-color:var(--p);color:var(--p);}
+.mtab.active{background:var(--p);color:#fff;border-color:var(--p);}
+.week-tabs{display:flex;gap:6px;margin-bottom:1.2rem;flex-wrap:wrap;}
+.wtab{padding:5px 14px;border-radius:20px;font-size:12px;border:0.5px solid var(--border2);
+  background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans);}
+.wtab:hover{border-color:var(--p);color:var(--p);}
+.wtab.active{background:var(--p3);color:var(--p);border-color:var(--p);}
+
+/* ── TRACKER TABLE ── */
+.tracker-card{background:var(--surface);border:0.5px solid var(--border);
+  border-radius:20px;overflow:hidden;margin-bottom:1.5rem;}
+.tracker-scroll{overflow-x:auto;}
+table.t{border-collapse:collapse;min-width:100%;}
+table.t th{font-size:11px;font-weight:400;color:var(--muted);padding:7px 3px;text-align:center;
+  border-bottom:0.5px solid var(--border);}
+table.t th.habit-h{text-align:left;padding-left:16px;min-width:190px;}
+table.t th.day-h{min-width:28px;}
+table.t tr{border-bottom:0.5px solid rgba(107,78,255,.05);}
+table.t tr:last-child{border-bottom:none;}
+table.t td{padding:5px 2px;}
+table.t td.habit-cell{padding-left:16px;padding-right:10px;font-size:12px;white-space:nowrap;}
+.cat-tag{display:inline-block;font-size:9px;font-weight:500;padding:2px 6px;
+  border-radius:7px;margin-right:5px;}
+.cat-study{background:#EEEDFE;color:var(--cat-study);}
+.cat-research{background:#E1F5EE;color:var(--cat-research);}
+.cat-health{background:#FDF0EB;color:var(--cat-health);}
+.cb{width:22px;height:22px;border-radius:6px;border:1.5px solid #D4CDEF;
+  background:transparent;cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;transition:all .12s;font-size:0;}
+.cb::after{content:'✓';font-size:12px;color:#fff;opacity:0;transition:opacity .12s;}
+.cb.on{background:var(--p);border-color:var(--p);}
+.cb.on::after{opacity:1;}
+.cb:hover:not(.on){border-color:var(--p);background:var(--p3);}
+td.check-td{text-align:center;}
+.rate-row td{font-size:10px;text-align:center;color:var(--light);
+  padding:5px 2px;background:rgba(107,78,255,.02);}
+.rate-row td.habit-cell{color:var(--muted);font-size:10.5px;}
+.rate-hi{color:#0E9B6E!important;font-weight:500;}
+.rate-mid{color:var(--p)!important;font-weight:500;}
+.rate-lo{color:var(--cat-health)!important;}
+.today-col{background:rgba(107,78,255,.04);}
+
+/* ── HEATMAP ── */
+.heatmap-card{background:var(--surface);border:0.5px solid var(--border);
+  border-radius:20px;padding:1.5rem;margin-bottom:1.5rem;}
+.heatmap-title{font-size:14px;font-weight:500;margin-bottom:4px;}
+.heatmap-sub{font-size:11px;color:var(--muted);margin-bottom:1.2rem;}
+.heatmap-legend{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-bottom:1rem;}
+.hm-sq{width:14px;height:14px;border-radius:3px;}
+.heatmap-months{display:flex;flex-direction:column;gap:1.5rem;}
+.hm-month-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:8px;}
+.hm-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.hm-cell{width:32px;height:32px;border-radius:8px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:500;color:rgba(0,0,0,0);
+  transition:transform .15s,box-shadow .15s;position:relative;border:1.5px solid transparent;}
+.hm-cell:hover{transform:scale(1.15);box-shadow:0 4px 12px rgba(0,0,0,.15);color:rgba(0,0,0,.5);}
+.hm-cell.today{border-color:var(--p);}
+.hm-cell.future{opacity:.35;cursor:default;}
+.hm-cell.future:hover{transform:none;box-shadow:none;}
+.hm-cell .hm-day{position:absolute;top:2px;left:4px;font-size:8px;opacity:.5;}
+/* hour colors */
+.hm-0{background:#EEE9FF;}
+.hm-1{background:#D4CDEF;}
+.hm-2{background:#C0B3E8;}
+.hm-3{background:#A89FD8;}
+.hm-4{background:#8E8AC8;}
+.hm-5{background:#7470C0;}
+.hm-6{background:#5955B8;}
+.hm-7{background:#4040A8;}
+.hm-8{background:#2A2898;}
+.hm-9{background:#1A1880;}
+.hm-stat{display:flex;gap:16px;flex-wrap:wrap;margin-top:1rem;font-size:12px;color:var(--muted);}
+.hm-stat strong{color:var(--text);}
+
+/* ── HEATMAP POPUP ── */
+.hm-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);
+  z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;
+  pointer-events:none;transition:opacity .2s;}
+.hm-popup-overlay.show{opacity:1;pointer-events:all;}
+.hm-popup{background:var(--surface);border-radius:20px;padding:1.5rem;width:280px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);transform:scale(.9);transition:transform .2s;}
+.hm-popup-overlay.show .hm-popup{transform:scale(1);}
+.hm-popup-title{font-family:var(--serif);font-size:18px;margin-bottom:4px;}
+.hm-popup-sub{font-size:11px;color:var(--muted);margin-bottom:1rem;}
+.hm-popup-goals{display:flex;gap:6px;margin-bottom:1rem;}
+.hm-pg{flex:1;text-align:center;padding:8px 4px;border-radius:10px;
+  border:1.5px solid var(--border2);background:var(--p4);cursor:pointer;transition:all .15s;}
+.hm-pg:hover{border-color:var(--p);}
+.hm-pg.sel{border-color:var(--p);background:var(--p3);}
+.hm-pg .pgn{font-family:var(--serif);font-size:20px;color:var(--p);}
+.hm-pg .pgn.c4{color:#A8B4FF;}.hm-pg .pgn.c5{color:#7DDFC3;}
+.hm-pg .pgn.c6{color:#FFD966;}.hm-pg .pgn.c8{color:#FF8B6B;}
+.hm-pg .pgl{font-size:9px;color:var(--muted);}
+.hm-popup-input-row{display:flex;gap:8px;align-items:center;margin-bottom:1rem;}
+.hm-popup-input{flex:1;height:42px;border-radius:10px;border:1.5px solid var(--border2);
+  text-align:center;font-size:22px;font-weight:500;font-family:var(--sans);
+  background:var(--p4);outline:none;color:var(--text);}
+.hm-popup-input:focus{border-color:var(--p);}
+.hm-popup-unit{font-size:13px;color:var(--muted);}
+.hm-popup-xp{font-size:12px;color:var(--p);font-weight:500;margin-bottom:1rem;min-height:1.2em;}
+.hm-popup-btns{display:flex;gap:8px;}
+.hm-pbtn{flex:1;padding:10px;border-radius:10px;font-size:13px;cursor:pointer;
+  border:0.5px solid var(--border2);background:var(--surface);font-family:var(--sans);}
+.hm-pbtn.primary{background:var(--p);color:#fff;border-color:var(--p);}
+
+/* ── CHART ── */
+.chart-card{background:var(--surface);border:0.5px solid var(--border);
+  border-radius:20px;padding:1.5rem;margin-bottom:1.5rem;}
+.chart-title{font-size:14px;font-weight:500;margin-bottom:4px;}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-bottom:1rem;}
+.leg{display:flex;align-items:center;gap:5px;}
+.leg-sq{width:10px;height:10px;border-radius:2px;}
+
+/* ── XP SECTION ── */
+.xp-card{background:var(--surface);border:0.5px solid var(--border);
+  border-radius:20px;padding:1.5rem;margin-bottom:1.5rem;}
+.xp-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;}
+.lv-eyebrow{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.xp-level{font-family:var(--serif);font-size:24px;color:var(--p);}
+.xp-pts{font-size:12px;color:var(--muted);}
+.xp-track{width:100%;height:22px;background:var(--p4);border-radius:11px;
+  border:0.5px solid var(--border);overflow:hidden;}
+.xp-fill{height:100%;border-radius:11px;
+  background:linear-gradient(90deg,#6B4EFF 0%,#A07DE0 100%);
+  transition:width .6s cubic-bezier(.34,1.56,.64,1);
+  display:flex;align-items:center;justify-content:flex-end;min-width:0;padding-right:8px;}
+.xp-fill span{font-size:10px;color:#fff;font-weight:500;white-space:nowrap;}
+.xp-breakdown{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--muted);}
+.xp-breakdown strong{color:var(--text);}
+
+/* ── MILESTONES ── */
+.ms-section{margin-top:1.25rem;}
+.ms-section-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.ms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.ms-card{border:0.5px solid var(--border2);border-radius:14px;padding:12px;
+  background:var(--p4);transition:all .2s;position:relative;}
+.ms-card.unlocked{background:var(--p3);border-color:rgba(107,78,255,.3);}
+.ms-card.claimed{background:#E8FBF4;border-color:rgba(14,155,110,.3);}
+.ms-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.ms-xp{font-size:11px;font-weight:600;color:var(--p);}
+.ms-xp.unlocked{color:var(--p);}
+.ms-badge{font-size:16px;}
+.ms-reward-label{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.ms-reward-input{width:100%;font-size:12px;border:none;background:transparent;
+  color:var(--text);font-family:var(--sans);outline:none;cursor:text;}
+.ms-reward-input::placeholder{color:var(--light);}
+.ms-claim-btn{display:none;margin-top:8px;width:100%;padding:5px;border-radius:8px;
+  font-size:11px;border:none;background:var(--green);color:#fff;cursor:pointer;font-family:var(--sans);}
+.ms-card.unlocked:not(.claimed) .ms-claim-btn{display:block;}
+.ms-claimed-tag{display:none;margin-top:6px;font-size:10px;color:var(--green);font-weight:500;}
+.ms-card.claimed .ms-claimed-tag{display:block;}
+
+/* ── ACTION BAR ── */
+.action-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-bottom:1rem;}
+.btn{padding:8px 20px;border-radius:10px;font-size:13px;cursor:pointer;
+  border:0.5px solid var(--border2);background:var(--surface);color:var(--text);
+  font-family:var(--sans);transition:all .15s;}
+.btn:hover{background:var(--p4);}
+.btn.primary{background:var(--p);color:#fff;border-color:var(--p);}
+.btn.primary:hover{background:var(--p2);}
+.save-msg{font-size:12px;color:var(--green);flex:1;text-align:right;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) scale(.9);
+  background:var(--text);color:#fff;padding:12px 24px;border-radius:24px;
+  font-size:14px;z-index:999;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) scale(1);}
+
+@media print{.action-bar,.hm-popup-overlay{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="manifesto">
+  <div class="manifesto-track" id="bannerTrack"></div>
+</div>
+
+<div id="toast"></div>
+
+<!-- HEATMAP POPUP -->
+<div class="hm-popup-overlay" id="hmOverlay" onclick="closePopup(event)">
+  <div class="hm-popup">
+    <div class="hm-popup-title" id="popupTitle"></div>
+    <div class="hm-popup-sub">记录今天实际学习时长</div>
+    <div class="hm-popup-goals" id="popupGoals"></div>
+    <div class="hm-popup-input-row">
+      <input class="hm-popup-input" type="number" id="popupInput" min="0" max="24" step="0.5" placeholder="0">
+      <span class="hm-popup-unit">小时</span>
+    </div>
+    <div class="hm-popup-xp" id="popupXpHint"></div>
+    <div class="hm-popup-btns">
+      <button class="hm-pbtn" onclick="closePopupDirect()">取消</button>
+      <button class="hm-pbtn primary" onclick="savePopup()">保存 ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">最强人类计划</div>
+  <h1><em>夏日保卫战</em> 2026</h1>
+  <div class="header-sub">Superhuman Summer Protocol</div>
+  <div class="date-range">📅 Jun 15 – Sep 6, 2026 · 84天</div>
+</header>
+
+<!-- USER SWITCHER -->
+<div class="user-bar">
+  <button class="user-btn active" id="btnA" onclick="switchUser('A')">
+    <div class="user-avatar">🐑</div>
+    <span id="nameA">用户 A</span>
+  </button>
+  <span class="vs-badge">VS</span>
+  <button class="user-btn" id="btnB" onclick="switchUser('B')">
+    <div class="user-avatar">🦊</div>
+    <span id="nameB">用户 B</span>
+  </button>
+</div>
+
+<!-- DUEL PANEL -->
+<div class="duel-card">
+  <div class="duel-side">
+    <div class="duel-name" id="duelNameA">用户 A</div>
+    <div class="duel-xp" id="duelXpA">0 XP</div>
+    <div class="duel-sub" id="duelSubA">今日 0 XP</div>
+  </div>
+  <div class="duel-vs"><div class="duel-vs-txt">vs</div></div>
+  <div class="duel-side right">
+    <div class="duel-name" id="duelNameB">用户 B</div>
+    <div class="duel-xp" id="duelXpB">0 XP</div>
+    <div class="duel-sub" id="duelSubB">今日 0 XP</div>
+  </div>
+  <div class="duel-bar-wrap">
+    <div class="duel-bar-bg"><div class="duel-bar-a" id="duelBarA" style="width:50%"></div></div>
+    <div class="duel-bar-b-wrap"><div class="duel-bar-b" id="duelBarB" style="transform:scaleX(1)"></div></div>
+  </div>
+</div>
+
+<div class="action-bar">
+  <span class="save-msg" id="saveMsg"></span>
+  <button class="btn" onclick="editNames()">✏️ 改名字</button>
+  <button class="btn" onclick="clearProgress()">重置</button>
+  <button class="btn primary" onclick="saveProgress()">💾 保存</button>
+</div>
+
+<!-- SUMMARY RINGS -->
+<div class="summary-grid" id="summaryCards"></div>
+
+<!-- MONTH + WEEK TABS -->
+<div class="month-tabs" id="monthTabs"></div>
+<div class="week-tabs" id="weekTabs"></div>
+
+<!-- TRACKER -->
+<div class="tracker-card">
+  <div class="tracker-scroll">
+    <table class="t" id="trackerTable"></table>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="chart-card">
+  <div class="chart-title">每日完成率趋势</div>
+  <div class="chart-legend">
+    <div class="leg"><div class="leg-sq" style="background:#6B4EFF"></div>综合</div>
+    <div class="leg"><div class="leg-sq" style="background:#5B4AE8"></div>学业</div>
+    <div class="leg"><div class="leg-sq" style="background:#0E9B6E"></div>科研</div>
+    <div class="leg"><div class="leg-sq" style="background:#D4522A"></div>健康</div>
+  </div>
+  <div style="position:relative;width:100%;height:200px;">
+    <canvas id="trendChart"></canvas>
+  </div>
+</div>
+
+<!-- HEATMAP -->
+<div class="heatmap-card">
+  <div class="heatmap-title">🔥 学习时长热力图</div>
+  <div class="heatmap-sub">点击任意格子记录当天学习时长 · 颜色越深越努力</div>
+  <div class="heatmap-legend">
+    <span>少</span>
+    <div class="hm-sq hm-0"></div>
+    <div class="hm-sq hm-2"></div>
+    <div class="hm-sq hm-4"></div>
+    <div class="hm-sq hm-6"></div>
+    <div class="hm-sq hm-8"></div>
+    <div class="hm-sq hm-9"></div>
+    <span>多</span>
+    <span style="margin-left:12px">4h<span style="color:var(--p)">+3XP</span></span>
+    <span>5h<span style="color:#7DDFC3">+5XP</span></span>
+    <span>6h<span style="color:#FFD966">+8XP</span></span>
+    <span>8h<span style="color:#FF8B6B">+15XP</span></span>
+  </div>
+  <div class="heatmap-months" id="heatmapGrid"></div>
+  <div class="hm-stat" id="hmStat"></div>
+</div>
+
+<!-- XP -->
+<div class="xp-card">
+  <div class="xp-top">
+    <div>
+      <div class="lv-eyebrow">当前等级</div>
+      <div class="xp-level" id="lvLabel">Lv.1 初出茅庐</div>
+    </div>
+    <div class="xp-pts"><span id="xpCur">0</span> / <span id="xpNxt">200</span> XP</div>
+  </div>
+  <div class="xp-track">
+    <div class="xp-fill" id="xpBar" style="width:0%"><span id="xpPct"></span></div>
+  </div>
+  <div class="xp-breakdown" id="xpBreakdown"></div>
+
+  <!-- MILESTONES -->
+  <div class="ms-section">
+    <div class="ms-section-title">🏆 里程碑奖励 — 点击填写你的奖励</div>
+    <div class="ms-grid" id="msGrid"></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const HABITS = [
+  { id:'ps', name:'刷题 / Problem Sets',          cat:'学业' },
+  { id:'tr', name:'网课/教材 / Lecture & Reading', cat:'学业' },
+  { id:'lr', name:'复习概率 / Review Stats',       cat:'学业' },
+  { id:'rw', name:'Research 进展 / Lab Work',      cat:'科研' },
+  { id:'py', name:'R / Python 代码',              cat:'科研' },
+  { id:'pr', name:'文献阅读 / Paper Reading',      cat:'科研' },
+  { id:'ex', name:'锻炼 ≥30min / Exercise',       cat:'健康' },
+  { id:'sl', name:'12点前入睡 / Sleep by 12am',   cat:'健康' },
+  { id:'hw', name:'喝水 8杯 / Hydrate',           cat:'健康' },
+];
+const CATS = {
+  '学业':   { color:'#5B4AE8', cls:'cat-study' },
+  '科研':   { color:'#0E9B6E', cls:'cat-research' },
+  '健康':   { color:'#D4522A', cls:'cat-health' },
+};
+
+// 84 days: Jun 15–Sep 6
+const MONTHS = [
+  { label:'June',   short:'6月', year:2026, month:5, from:15, to:30 },
+  { label:'July',   short:'7月', year:2026, month:6, from:1,  to:31 },
+  { label:'August', short:'8月', year:2026, month:7, from:1,  to:31 },
+  { label:'Sep',    short:'9月', year:2026, month:8, from:1,  to:6  },
+];
+
+// XP: 84×9=756 habit + up to 84×15=1260 study = max ~2016
+// Milestones spread across journey
+const MILESTONE_DEFS = [
+  { xp:100,  emoji:'🌱', size:'小',  label:'初见成效' },
+  { xp:250,  emoji:'⚡', size:'小',  label:'势不可挡' },
+  { xp:450,  emoji:'🔥', size:'中',  label:'自律战士' },
+  { xp:700,  emoji:'💎', size:'中',  label:'意志钢铁' },
+  { xp:1000, emoji:'🌟', size:'大',  label:'超凡存在' },
+  { xp:1350, emoji:'🏆', size:'大',  label:'传说境界' },
+  { xp:1700, emoji:'👑', size:'终极', label:'最强人类' },
+];
+
+const LEVELS = [
+  { min:0,    name:'初出茅庐',   next:200  },
+  { min:200,  name:'习惯养成中', next:450  },
+  { min:450,  name:'自律战士',   next:800  },
+  { min:800,  name:'意志钢铁',   next:1200 },
+  { min:1200, name:'超凡存在',   next:1700 },
+  { min:1700, name:'最强人类 ✦',next:9999 },
+];
+
+const TODAY = new Date();
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let state = {
+  currentUser: 'A',
+  names: { A:'用户 A', B:'用户 B' },
+  A: { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set() },
+  B: { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set() },
+};
+let activeMonthIdx = 0;
+let activeWeekIdx  = 0; // 0=all
+let chart = null;
+let popupDay = null; // { year, month, day }
+
+// ─── FIREBASE SYNC ────────────────────────────────────────────────────────────
+let isSyncing = false;
+
+function showSyncStatus(msg, color='var(--green)') {
+  const el = document.getElementById('saveMsg');
+  el.style.color = color;
+  el.textContent = msg;
+}
+
+function stateToFirebase() {
+  const out = { names: state.names };
+  ['A','B'].forEach(u => {
+    out[u] = {
+      checks:    state[u].checks,
+      hours:     state[u].hours,
+      msRewards: state[u].msRewards,
+      msClaimed: [...state[u].msClaimed],
+      shownMS:   [...state[u].shownMS],
+    };
+  });
+  return out;
+}
+
+function firebaseToState(p) {
+  if (!p) return;
+  state.names = p.names || state.names;
+  ['A','B'].forEach(u => {
+    if (p[u]) {
+      state[u].checks    = p[u].checks    || {};
+      state[u].hours     = p[u].hours     || {};
+      state[u].msRewards = p[u].msRewards || {};
+      state[u].msClaimed = new Set(p[u].msClaimed || []);
+      state[u].shownMS   = new Set(p[u].shownMS   || []);
+    }
+  });
+}
+
+function loadData() {
+  // Firebase listener — real-time sync
+  showSyncStatus('⏳ 连接中...', 'var(--muted)');
+  db.ref(DB_PATH).on('value', (snapshot) => {
+    if (isSyncing) return; // skip if we just wrote
+    const data = snapshot.val();
+    if (data) {
+      firebaseToState(data);
+      render();
+    }
+    showSyncStatus('🟢 已同步', 'var(--green)');
+    setTimeout(() => showSyncStatus(''), 2000);
+  }, (err) => {
+    showSyncStatus('🔴 同步失败', 'var(--red)');
+    console.error(err);
+  });
+}
+
+function saveProgress() {
+  isSyncing = true;
+  showSyncStatus('⏳ 保存中...', 'var(--muted)');
+  db.ref(DB_PATH).set(stateToFirebase())
+    .then(() => {
+      showSyncStatus('✓ 已保存并同步', 'var(--green)');
+      setTimeout(() => { showSyncStatus(''); isSyncing = false; }, 2000);
+    })
+    .catch(err => {
+      showSyncStatus('❌ 保存失败', 'var(--red)');
+      isSyncing = false;
+      console.error(err);
+    });
+}
+
+function clearProgress() {
+  if (!confirm(`确定重置 ${state.names[state.currentUser]} 的所有数据？`)) return;
+  const u = state.currentUser;
+  state[u] = { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set() };
+  saveProgress();
+  render();
+}
+
+// ─── USER ─────────────────────────────────────────────────────────────────────
+function switchUser(u) {
+  state.currentUser = u;
+  document.getElementById('btnA').classList.toggle('active', u==='A');
+  document.getElementById('btnB').classList.toggle('active', u==='B');
+  render();
+}
+function editNames() {
+  const na = prompt('用户 A 的名字：', state.names.A);
+  if (na) state.names.A = na.trim()||state.names.A;
+  const nb = prompt('用户 B 的名字：', state.names.B);
+  if (nb) state.names.B = nb.trim()||state.names.B;
+  document.getElementById('nameA').textContent = state.names.A;
+  document.getElementById('nameB').textContent = state.names.B;
+  render();
+}
+
+// ─── XP CALC ──────────────────────────────────────────────────────────────────
+function hoursXP(h) {
+  h = parseFloat(h)||0;
+  if (h >= 8) return 15;
+  if (h >= 6) return 8;
+  if (h >= 5) return 5;
+  if (h >= 4) return 3;
+  return 0;
+}
+function userXP(u, todayOnly) {
+  const ud = state[u];
+  let habitXP = 0, studyXP = 0;
+  if (todayOnly) {
+    const tk = `${TODAY.getFullYear()}_${TODAY.getMonth()}_${TODAY.getDate()}`;
+    HABITS.forEach(h => { if (ud.checks[`${h.id}_${tk}`]) habitXP++; });
+    studyXP = hoursXP(ud.hours[tk]||0);
+  } else {
+    habitXP = Object.keys(ud.checks).length;
+    studyXP = Object.values(ud.hours).reduce((s,v)=>s+hoursXP(v),0);
+  }
+  return { habitXP, studyXP, total: habitXP+studyXP };
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function dayKey(year, month, day) { return `${year}_${month}_${day}`; }
+function isOn(hid, year, month, day) {
+  return !!state[state.currentUser].checks[`${hid}_${dayKey(year,month,day)}`];
+}
+function toggle(hid, year, month, day) {
+  const k = `${hid}_${dayKey(year,month,day)}`;
+  const ud = state[state.currentUser];
+  if (ud.checks[k]) delete ud.checks[k]; else ud.checks[k] = 1;
+  render(); checkMS();
+}
+function getDOW(year, month, day) {
+  return ['日','一','二','三','四','五','六'][new Date(year,month,day).getDay()];
+}
+function isToday(year, month, day) {
+  return TODAY.getFullYear()===year && TODAY.getMonth()===month && TODAY.getDate()===day;
+}
+function isFuture(year, month, day) {
+  return false; // all days clickable - plan ahead or backfill freely
+}
+
+// ─── RENDER: DUEL PANEL ───────────────────────────────────────────────────────
+function renderDuel() {
+  ['A','B'].forEach(u => {
+    const xp = userXP(u);
+    const today = userXP(u, true);
+    document.getElementById(`duelName${u}`).textContent = state.names[u];
+    document.getElementById(`duelXp${u}`).textContent   = xp.total + ' XP';
+    document.getElementById(`duelSub${u}`).textContent  = `今日 ${today.total} XP`;
+  });
+  document.getElementById('nameA').textContent = state.names.A;
+  document.getElementById('nameB').textContent = state.names.B;
+  document.getElementById('duelNameA').textContent = state.names.A;
+  document.getElementById('duelNameB').textContent = state.names.B;
+  const xpA = userXP('A').total, xpB = userXP('B').total;
+  const tot = xpA + xpB || 1;
+  document.getElementById('duelBarA').style.width = (xpA/tot*100)+'%';
+  document.getElementById('duelBarB').style.transform = `scaleX(${xpB/tot})`;
+}
+
+// ─── RENDER: SUMMARY RINGS ────────────────────────────────────────────────────
+function drawRing(canvas, pct, color) {
+  const pr = window.devicePixelRatio||1, S=68*pr;
+  canvas.width=S; canvas.height=S;
+  canvas.style.width='68px'; canvas.style.height='68px';
+  const ctx=canvas.getContext('2d'), cx=S/2, cy=S/2, r=S*.36;
+  ctx.lineWidth=S*.1; ctx.lineCap='round';
+  ctx.strokeStyle='#EEE9FF';
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+  if (pct>0) {
+    ctx.strokeStyle=color;
+    ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2); ctx.stroke();
+  }
+}
+function calcStats() {
+  const ud = state[state.currentUser];
+  const catK = Object.keys(CATS);
+  let all={d:0,t:0}; let bycat={};
+  catK.forEach(c=>bycat[c]={d:0,t:0});
+  MONTHS.forEach(m => {
+    for (let d=m.from; d<=m.to; d++) {
+      HABITS.forEach(h => {
+        all.t++; bycat[h.cat].t++;
+        if (ud.checks[`${h.id}_${dayKey(m.year,m.month,d)}`]) { all.d++; bycat[h.cat].d++; }
+      });
+    }
+  });
+  const p = x => x.t ? Math.round(x.d*100/x.t) : 0;
+  return { all:p(all), cats:Object.fromEntries(catK.map(c=>[c,p(bycat[c])])) };
+}
+function renderSummary() {
+  const s = calcStats();
+  const defs=[
+    {label:'总进度',val:s.all,color:'#6B4EFF'},
+    {label:'学业',val:s.cats['学业'],color:CATS['学业'].color},
+    {label:'科研',val:s.cats['科研'],color:CATS['科研'].color},
+    {label:'健康',val:s.cats['健康'],color:CATS['健康'].color},
+  ];
+  const el=document.getElementById('summaryCards');
+  el.innerHTML=defs.map(d=>`<div class="scard">
+    <div class="ring-wrap"><canvas id="ring_${d.label}"></canvas><div class="ring-pct">${d.val}%</div></div>
+    <div class="scard-label">${d.label}</div></div>`).join('');
+  defs.forEach(d=>{ const c=document.getElementById(`ring_${d.label}`); if(c) drawRing(c,d.val,d.color); });
+}
+
+// ─── RENDER: TABS ─────────────────────────────────────────────────────────────
+function renderTabs() {
+  document.getElementById('monthTabs').innerHTML = MONTHS.map((m,i)=>
+    `<div class="mtab${activeMonthIdx===i?' active':''}" onclick="setMonth(${i})">${m.short} ${m.label}</div>`
+  ).join('');
+  const m = MONTHS[activeMonthIdx];
+  const totalDays = m.to - m.from + 1;
+  const weeks = [{ label:'全月', from:m.from, to:m.to }];
+  for (let s=m.from; s<=m.to; s+=7) {
+    weeks.push({ label:`Week ${weeks.length}`, from:s, to:Math.min(s+6,m.to) });
+  }
+  document.getElementById('weekTabs').innerHTML = weeks.map((w,i)=>
+    `<div class="wtab${activeWeekIdx===i?' active':''}" onclick="setWeek(${i})">${w.label}</div>`
+  ).join('');
+}
+function setMonth(i) { activeMonthIdx=i; activeWeekIdx=0; render(); }
+function setWeek(i)  { activeWeekIdx=i; render(); }
+function getDayRange() {
+  const m = MONTHS[activeMonthIdx];
+  if (activeWeekIdx===0) return { year:m.year, month:m.month, from:m.from, to:m.to };
+  let s=m.from, wi=0;
+  while (wi<activeWeekIdx) { s+=7; wi++; }
+  return { year:m.year, month:m.month, from:s, to:Math.min(s+6,m.to) };
+}
+
+// ─── RENDER: TRACKER ──────────────────────────────────────────────────────────
+function renderTable() {
+  const { year, month, from, to } = getDayRange();
+  const days=[]; for(let d=from;d<=to;d++) days.push(d);
+  let html='<thead><tr><th class="habit-h">习惯</th>';
+  days.forEach(d=>{
+    const dow=getDOW(year,month,d);
+    const wknd=dow==='日'||dow==='六';
+    const tod=isToday(year,month,d);
+    html+=`<th class="day-h${tod?' today-col':''}" style="${wknd?'color:#6B4EFF':''}">${dow}<br><b style="font-weight:500;font-size:12px">${d}</b></th>`;
+  });
+  html+='</tr></thead><tbody>';
+  let lastCat='';
+  HABITS.forEach(h=>{
+    const ch=h.cat!==lastCat; lastCat=h.cat;
+    html+=`<tr><td class="habit-cell">${ch?`<span class="cat-tag ${CATS[h.cat].cls}">${h.cat}</span>`:'<span style="display:inline-block;width:34px"></span>'}<span>${h.name}</span></td>`;
+    days.forEach(d=>{
+      const on=isOn(h.id,year,month,d);
+      const fut=isFuture(year,month,d);
+      const tod=isToday(year,month,d);
+      html+=`<td class="check-td${tod?' today-col':''}">${fut?'<span style="color:var(--border2);font-size:10px">—</span>':`<button class="cb${on?' on':''}" onclick="toggle('${h.id}',${year},${month},${d})"></button>`}</td>`;
+    });
+    html+='</tr>';
+  });
+  // rate row
+  html+='<tr class="rate-row"><td class="habit-cell">每日完成率</td>';
+  days.forEach(d=>{
+    const ud=state[state.currentUser];
+    let done=0;
+    HABITS.forEach(h=>{ if(ud.checks[`${h.id}_${dayKey(year,month,d)}`]) done++; });
+    const pct=Math.round(done*100/HABITS.length);
+    const cls=pct>=80?'rate-hi':pct>=50?'rate-mid':pct>0?'rate-lo':'';
+    const fut=isFuture(year,month,d);
+    html+=`<td class="${cls}">${fut?'':pct+'%'}</td>`;
+  });
+  html+='</tr></tbody>';
+  document.getElementById('trackerTable').innerHTML=html;
+}
+
+// ─── RENDER: CHART ────────────────────────────────────────────────────────────
+function renderChart() {
+  const { year, month, from, to } = getDayRange();
+  const labels=[],allD=[],studyD=[],resD=[],healthD=[];
+  const ud=state[state.currentUser];
+  for (let d=from;d<=to;d++) {
+    if (isFuture(year,month,d)) continue;
+    labels.push(d);
+    const byCat={'学业':{d:0,t:0},'科研':{d:0,t:0},'健康':{d:0,t:0}};
+    let ad=0,at=0;
+    HABITS.forEach(h=>{
+      byCat[h.cat].t++; at++;
+      if(ud.checks[`${h.id}_${dayKey(year,month,d)}`]){ byCat[h.cat].d++; ad++; }
+    });
+    const p=x=>x.t?Math.round(x.d*100/x.t):0;
+    allD.push(p({d:ad,t:at}));
+    studyD.push(p(byCat['学业']));
+    resD.push(p(byCat['科研']));
+    healthD.push(p(byCat['健康']));
+  }
+  const ctx=document.getElementById('trendChart').getContext('2d');
+  if(chart) chart.destroy();
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'综合', data:allD,   borderColor:'#6B4EFF',backgroundColor:'rgba(107,78,255,.07)',fill:true,borderWidth:2.5,pointRadius:2,tension:.35},
+      {label:'学业', data:studyD, borderColor:'#5B4AE8',borderWidth:1.5,pointRadius:1,tension:.35,borderDash:[5,3]},
+      {label:'科研', data:resD,   borderColor:'#0E9B6E',borderWidth:1.5,pointRadius:1,tension:.35,borderDash:[5,3]},
+      {label:'健康', data:healthD,borderColor:'#D4522A',borderWidth:1.5,pointRadius:1,tension:.35,borderDash:[5,3]},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{min:0,max:100,ticks:{callback:v=>v+'%',font:{size:10},color:'#B8B0D4'},grid:{color:'rgba(107,78,255,.06)'}},
+        x:{ticks:{font:{size:10},color:'#B8B0D4',maxTicksLimit:12},grid:{display:false}}
+      }
+    }
+  });
+}
+
+// ─── RENDER: HEATMAP ──────────────────────────────────────────────────────────
+function hmColor(h) {
+  h=parseFloat(h)||0;
+  if(h>=10) return 'hm-9';
+  if(h>=8)  return 'hm-8';
+  if(h>=7)  return 'hm-7';
+  if(h>=6)  return 'hm-6';
+  if(h>=5)  return 'hm-5';
+  if(h>=4)  return 'hm-4';
+  if(h>=3)  return 'hm-3';
+  if(h>=2)  return 'hm-2';
+  if(h>=1)  return 'hm-1';
+  return 'hm-0';
+}
+function renderHeatmap() {
+  const ud=state[state.currentUser];
+  let html='';
+  MONTHS.forEach(m=>{
+    html+=`<div><div class="hm-month-label">${m.label} ${m.year}</div><div class="hm-grid">`;
+    for(let d=m.from;d<=m.to;d++){
+      const k=dayKey(m.year,m.month,d);
+      const h=parseFloat(ud.hours[k])||0;
+      const col=hmColor(h);
+      const fut=isFuture(m.year,m.month,d);
+      const tod=isToday(m.year,m.month,d);
+      const xp=hoursXP(h);
+      const tip=h>0?`${h}h · +${xp}XP`:'点击记录';
+      html+=`<div class="hm-cell ${col}${fut?' future':''}${tod?' today':''}"
+        title="${tip}"
+        ${!fut?`onclick="openPopup(${m.year},${m.month},${d})"`:''}>
+        <span class="hm-day">${d}</span>${h>0?h:''}
+      </div>`;
+    }
+    html+='</div></div>';
+  });
+  document.getElementById('heatmapGrid').innerHTML=html;
+
+  // stats
+  const vals=Object.values(ud.hours).map(v=>parseFloat(v)||0).filter(v=>v>0);
+  const total=vals.reduce((a,b)=>a+b,0);
+  const avg=vals.length?(total/vals.length).toFixed(1):0;
+  const studyXP=Object.values(ud.hours).reduce((s,v)=>s+hoursXP(v),0);
+  document.getElementById('hmStat').innerHTML=
+    `<span>累计 <strong>${total.toFixed(1)}h</strong></span>`+
+    `<span>日均 <strong>${avg}h</strong></span>`+
+    `<span>≥4h <strong>${vals.filter(v=>v>=4).length}天</strong></span>`+
+    `<span>≥6h <strong>${vals.filter(v=>v>=6).length}天</strong></span>`+
+    `<span>≥8h <strong>${vals.filter(v=>v>=8).length}天</strong></span>`+
+    `<span>学习XP <strong style="color:var(--p)">+${studyXP}</strong></span>`;
+}
+
+// ─── HEATMAP POPUP ────────────────────────────────────────────────────────────
+function openPopup(year, month, day) {
+  popupDay={year,month,day};
+  const ud=state[state.currentUser];
+  const k=dayKey(year,month,day);
+  const cur=parseFloat(ud.hours[k])||0;
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('popupTitle').textContent=`${months[month]} ${day}`;
+  document.getElementById('popupInput').value=cur||'';
+  updatePopupXP(cur);
+  const goals=[
+    {h:4,label:'保底',cls:'c4'},{h:5,label:'活着',cls:'c5'},
+    {h:6,label:'目标',cls:'c6'},{h:8,label:'传说',cls:'c8'}
+  ];
+  document.getElementById('popupGoals').innerHTML=goals.map(g=>
+    `<div class="hm-pg${cur===g.h?' sel':''}" onclick="setPopupHours(${g.h})">
+      <div class="pgn ${g.cls}">${g.h}h</div><div class="pgl">${g.label}</div></div>`
+  ).join('');
+  document.getElementById('hmOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('popupInput').focus(),100);
+}
+function setPopupHours(h) {
+  document.getElementById('popupInput').value=h;
+  updatePopupXP(h);
+  document.querySelectorAll('.hm-pg').forEach((el,i)=>{
+    el.classList.toggle('sel',[4,5,6,8][i]===h);
+  });
+}
+function updatePopupXP(h) {
+  const xp=hoursXP(h);
+  const hint=document.getElementById('popupXpHint');
+  if(xp>0) hint.textContent=`✨ 今天可获得额外 +${xp} XP`;
+  else hint.textContent='';
+}
+document.getElementById('popupInput').addEventListener('input',function(){
+  updatePopupXP(parseFloat(this.value)||0);
+});
+function savePopup() {
+  if(!popupDay) return;
+  const v=parseFloat(document.getElementById('popupInput').value)||0;
+  const k=dayKey(popupDay.year,popupDay.month,popupDay.day);
+  if(v>0) state[state.currentUser].hours[k]=v;
+  else delete state[state.currentUser].hours[k];
+  closePopupDirect();
+  render(); checkMS();
+}
+function closePopup(e) { if(e.target===document.getElementById('hmOverlay')) closePopupDirect(); }
+function closePopupDirect() {
+  document.getElementById('hmOverlay').classList.remove('show');
+  popupDay=null;
+}
+
+// ─── RENDER: XP + MILESTONES ──────────────────────────────────────────────────
+function renderXP() {
+  const u=state.currentUser;
+  const xp=userXP(u);
+  const total=xp.total;
+  let lv=LEVELS[0],lvIdx=0;
+  LEVELS.forEach((l,i)=>{ if(total>=l.min){lv=l;lvIdx=i;} });
+  const range=lv.next-lv.min, prog=total-lv.min;
+  const pct=lv.next>=9999?100:Math.min(100,Math.round(prog*100/range));
+  document.getElementById('lvLabel').textContent=`Lv.${lvIdx+1} ${lv.name}`;
+  document.getElementById('xpCur').textContent=total;
+  document.getElementById('xpNxt').textContent=lv.next>=9999?'∞':lv.next;
+  document.getElementById('xpBar').style.width=Math.max(pct,0)+'%';
+  document.getElementById('xpPct').textContent=pct>8?pct+'%':'';
+  document.getElementById('xpBreakdown').innerHTML=
+    `<span>习惯打卡 <strong>+${xp.habitXP} XP</strong></span>`+
+    `<span>学习时长 <strong>+${xp.studyXP} XP</strong></span>`+
+    `<span>本月总计 <strong style="color:var(--p)">${total} / 1700 XP</strong></span>`;
+
+  // milestones
+  const ud=state[u];
+  document.getElementById('msGrid').innerHTML=MILESTONE_DEFS.map(m=>{
+    const unlocked=total>=m.xp;
+    const claimed=ud.msClaimed.has(m.xp);
+    const reward=ud.msRewards[m.xp]||'';
+    return `<div class="ms-card${claimed?' claimed':unlocked?' unlocked':''}">
+      <div class="ms-top">
+        <span class="ms-xp${unlocked?' unlocked':''}">${m.xp} XP</span>
+        <span class="ms-badge">${m.emoji}</span>
+      </div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:6px;color:var(--text)">${m.size}奖励 · ${m.label}</div>
+      <div class="ms-reward-label">奖励内容（点击填写）</div>
+      <input class="ms-reward-input" placeholder="例：买一杯喜茶 🧋"
+        value="${reward}"
+        onchange="saveReward(${m.xp},this.value)"
+        ${claimed?'disabled':''}>
+      <button class="ms-claim-btn" onclick="claimMS(${m.xp})">🎉 领取奖励！</button>
+      <div class="ms-claimed-tag">✓ 已领取 ${reward?'· '+reward:''}</div>
+    </div>`;
+  }).join('');
+}
+function saveReward(xp, val) {
+  state[state.currentUser].msRewards[xp] = val;
+}
+function claimMS(xp) {
+  const reward=state[state.currentUser].msRewards[xp]||'奖励';
+  if(!confirm(`确认领取：${reward}？`)) return;
+  state[state.currentUser].msClaimed.add(xp);
+  showToast(`🎉 恭喜！领取了「${reward}」`);
+  render();
+}
+
+// ─── MILESTONES CHECK ─────────────────────────────────────────────────────────
+const MS_TOASTS = {
+  100:  '🌱 100 XP！初见成效，继续加油！',
+  250:  '⚡ 250 XP！势不可挡！',
+  450:  '🔥 450 XP！自律战士觉醒！',
+  700:  '💎 700 XP！意志钢铁！',
+  1000: '🌟 1000 XP！超凡存在！',
+  1350: '🏆 1350 XP！传说境界！',
+  1700: '👑 1700 XP！你已成为最强人类！！',
+};
+function checkMS() {
+  const xp=userXP(state.currentUser).total;
+  const ud=state[state.currentUser];
+  for(const [threshold, msg] of Object.entries(MS_TOASTS)) {
+    if(xp>=+threshold && !ud.shownMS.has(+threshold)) {
+      ud.shownMS.add(+threshold);
+      showToast(msg); break;
+    }
+  }
+}
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ─── MAIN RENDER ──────────────────────────────────────────────────────────────
+function render() {
+  renderDuel();
+  renderSummary();
+  renderTabs();
+  renderTable();
+  renderChart();
+  renderHeatmap();
+  renderXP();
+}
+
+// ─── BANNER ───────────────────────────────────────────────────────────────────
+(function(){
+  const items=[
+    {e:'😴', txt:'不到', n:'4', nc:'f4', s:'小时等于没学'},
+    {e:'😤', txt:'', n:'5', nc:'f5', s:'小时才算活着'},
+    {e:'🔥', txt:'学够', n:'6', nc:'f6', s:'小时勉强及格'},
+    {e:'👾', txt:'', n:'8', nc:'f8', s:'小时已超越人类'},
+    {e:'💀', txt:'睡前问自己：今天学了几小时？', n:'', nc:'', s:''},
+    {e:'📖', txt:'不卷死', n:'', nc:'', s:'自己绝不罢休'},
+    {e:'🏆', txt:'争', n:'6', nc:'f6', s:'是义务，追'},
+    {e:'👑', txt:'', n:'8', nc:'f8', s:'是信仰'},
+  ];
+  const sep='<span class="msep">✦</span>';
+  const make=it=>`<div class="manifesto-item">${it.e} ${it.txt}<span class="mnum ${it.nc}">${it.n}</span>${it.s}</div>${sep}`;
+  const html=items.map(make).join('');
+  const track=document.getElementById('bannerTrack');
+  track.innerHTML=html+html;
+})();
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+// Set active month to current or nearest
+activeMonthIdx = 0;
+const nowM = TODAY.getMonth(), nowY = TODAY.getFullYear();
+MONTHS.forEach((m,i)=>{ if(m.year===nowY && m.month===nowM) activeMonthIdx=i; });
+
+loadData();
+render();
+</script>
+</body>
+</html>
+
