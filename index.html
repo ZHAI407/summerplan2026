@@ -8,24 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<script>
-// ─── FIREBASE ────────────────────────────────────────────────────────────────
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBOGSwnudzX9PY8cygSA7X6fDQOi7zGxjU",
-  authDomain: "superhuman-2636.firebaseapp.com",
-  databaseURL: "https://superhuman-2636-default-rtdb.firebaseio.com",
-  projectId: "superhuman-2636",
-  storageBucket: "superhuman-2636.firebasestorage.app",
-  messagingSenderId: "783984103051",
-  appId: "1:783984103051:web:98a56238cdb040b09d8e8e"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const DB_PATH = 'summer2026';
-
 <style>
 :root {
   --p:#6B4EFF;--p2:#8B72FF;--p3:#EEE9FF;--p4:#F7F5FF;
@@ -483,6 +465,7 @@ const LEVELS = [
 ];
 
 const TODAY = new Date();
+const STORAGE_KEY = 'shr_summer_2026';
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let state = {
@@ -496,81 +479,46 @@ let activeWeekIdx  = 0; // 0=all
 let chart = null;
 let popupDay = null; // { year, month, day }
 
-// ─── FIREBASE SYNC ────────────────────────────────────────────────────────────
-let isSyncing = false;
-
-function showSyncStatus(msg, color='var(--green)') {
-  const el = document.getElementById('saveMsg');
-  el.style.color = color;
-  el.textContent = msg;
-}
-
-function stateToFirebase() {
-  const out = { names: state.names };
-  ['A','B'].forEach(u => {
-    out[u] = {
-      checks:    state[u].checks,
-      hours:     state[u].hours,
-      msRewards: state[u].msRewards,
-      msClaimed: [...state[u].msClaimed],
-      shownMS:   [...state[u].shownMS],
-    };
-  });
-  return out;
-}
-
-function firebaseToState(p) {
-  if (!p) return;
-  state.names = p.names || state.names;
-  ['A','B'].forEach(u => {
-    if (p[u]) {
-      state[u].checks    = p[u].checks    || {};
-      state[u].hours     = p[u].hours     || {};
-      state[u].msRewards = p[u].msRewards || {};
-      state[u].msClaimed = new Set(p[u].msClaimed || []);
-      state[u].shownMS   = new Set(p[u].shownMS   || []);
-    }
-  });
-}
-
+// ─── PERSISTENCE ──────────────────────────────────────────────────────────────
 function loadData() {
-  // Firebase listener — real-time sync
-  showSyncStatus('⏳ 连接中...', 'var(--muted)');
-  db.ref(DB_PATH).on('value', (snapshot) => {
-    if (isSyncing) return; // skip if we just wrote
-    const data = snapshot.val();
-    if (data) {
-      firebaseToState(data);
-      render();
-    }
-    showSyncStatus('🟢 已同步', 'var(--green)');
-    setTimeout(() => showSyncStatus(''), 2000);
-  }, (err) => {
-    showSyncStatus('🔴 同步失败', 'var(--red)');
-    console.error(err);
-  });
-}
-
-function saveProgress() {
-  isSyncing = true;
-  showSyncStatus('⏳ 保存中...', 'var(--muted)');
-  db.ref(DB_PATH).set(stateToFirebase())
-    .then(() => {
-      showSyncStatus('✓ 已保存并同步', 'var(--green)');
-      setTimeout(() => { showSyncStatus(''); isSyncing = false; }, 2000);
-    })
-    .catch(err => {
-      showSyncStatus('❌ 保存失败', 'var(--red)');
-      isSyncing = false;
-      console.error(err);
+  try {
+    const d = localStorage.getItem(STORAGE_KEY);
+    if (!d) return;
+    const p = JSON.parse(d);
+    state.names = p.names || state.names;
+    ['A','B'].forEach(u => {
+      if (p[u]) {
+        state[u].checks   = p[u].checks   || {};
+        state[u].hours    = p[u].hours    || {};
+        state[u].msRewards= p[u].msRewards|| {};
+        state[u].msClaimed= new Set(p[u].msClaimed||[]);
+        state[u].shownMS  = new Set(p[u].shownMS||[]);
+      }
     });
+  } catch(e) {}
 }
-
+function saveProgress() {
+  try {
+    const out = { names: state.names };
+    ['A','B'].forEach(u => {
+      out[u] = {
+        checks:    state[u].checks,
+        hours:     state[u].hours,
+        msRewards: state[u].msRewards,
+        msClaimed: [...state[u].msClaimed],
+        shownMS:   [...state[u].shownMS],
+      };
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(out));
+    const m = document.getElementById('saveMsg');
+    m.textContent = '✓ 已保存';
+    setTimeout(() => m.textContent = '', 2500);
+  } catch(e) { alert('保存失败'); }
+}
 function clearProgress() {
   if (!confirm(`确定重置 ${state.names[state.currentUser]} 的所有数据？`)) return;
   const u = state.currentUser;
   state[u] = { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set() };
-  saveProgress();
   render();
 }
 
@@ -1025,4 +973,3 @@ render();
 </script>
 </body>
 </html>
-
