@@ -300,7 +300,99 @@ td.check-td{text-align:center;}
   font-size:14px;z-index:999;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;}
 #toast.show{opacity:1;transform:translateX(-50%) scale(1);}
 
-@media print{.action-bar,.hm-popup-overlay{display:none;}}
+/* ── GACHA ── */
+.gacha-card{background:var(--surface);border:0.5px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:1.5rem;}
+.gacha-title{font-size:14px;font-weight:500;margin-bottom:4px;}
+.gacha-sub{font-size:11px;color:var(--muted);margin-bottom:1.2rem;}
+.gacha-xp-bar{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;flex-wrap:wrap;}
+.gacha-xp-user{flex:1;min-width:160px;background:var(--p4);border:0.5px solid var(--border2);border-radius:12px;padding:10px 14px;}
+.gacha-xp-user .gxu-name{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.gacha-xp-user .gxu-val{font-family:var(--serif);font-size:22px;color:var(--p);}
+.gacha-xp-user .gxu-sub{font-size:10px;color:var(--muted);}
+.gacha-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.5rem;}
+.gacha-btn{flex:1;min-width:120px;padding:12px 8px;border-radius:14px;border:none;cursor:pointer;
+  font-family:var(--serif);font-style:italic;font-size:16px;transition:all .2s;position:relative;overflow:hidden;}
+.gacha-btn-1{background:linear-gradient(135deg,#7c6fff,#a89fff);color:#fff;}
+.gacha-btn-10{background:linear-gradient(135deg,#C8A84B,#f0d060);color:#fff;}
+.gacha-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(107,78,255,.25);}
+.gacha-btn .gbcost{display:block;font-family:var(--sans);font-style:normal;font-size:11px;opacity:.85;margin-top:2px;}
+.gacha-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.gacha-pity{font-size:11px;color:var(--muted);margin-bottom:1.2rem;}
+.gacha-pity span{color:var(--p);font-weight:500;}
+
+/* gacha modal */
+.gacha-overlay{position:fixed;inset:0;background:rgba(10,8,20,.85);z-index:200;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.gacha-overlay.show{opacity:1;pointer-events:all;}
+.gacha-stage{position:relative;width:340px;min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+canvas#gachaCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.gacha-cards-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;position:relative;z-index:2;max-width:600px;}
+.gacha-result-card{width:100px;perspective:600px;cursor:pointer;}
+.gacha-result-card .card-inner{width:100%;height:140px;position:relative;transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.4,2,.6,1);transform:rotateY(180deg);}
+.gacha-result-card.revealed .card-inner{transform:rotateY(0deg);}
+.card-front,.card-back{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;}
+.card-back{background:linear-gradient(135deg,#3a2a7a,#6B4EFF);transform:rotateY(180deg);}
+.card-back-star{font-size:28px;}
+.card-front{color:#fff;text-align:center;}
+.card-front .cf-stars{font-size:13px;margin-bottom:4px;}
+.card-front .cf-emoji{font-size:28px;margin-bottom:4px;}
+.card-front .cf-name{font-size:11px;line-height:1.3;}
+.rarity-1 .card-front{background:linear-gradient(135deg,#4a4a6a,#6a6a9a);}
+.rarity-2 .card-front{background:linear-gradient(135deg,#2a6a3a,#4aaa5a);}
+.rarity-3 .card-front{background:linear-gradient(135deg,#1a4a8a,#3a7aff);}
+.rarity-4 .card-front{background:linear-gradient(135deg,#8a2a2a,#ff6a00);box-shadow:0 0 20px rgba(255,100,0,.5);}
+.gacha-reveal-all{margin-top:16px;padding:10px 28px;border-radius:24px;border:none;
+  background:rgba(255,255,255,.15);color:#fff;font-size:14px;cursor:pointer;font-family:var(--sans);
+  backdrop-filter:blur(4px);position:relative;z-index:2;}
+.gacha-reveal-all:hover{background:rgba(255,255,255,.25);}
+.gacha-close-btn{margin-top:12px;padding:8px 24px;border-radius:24px;border:none;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-size:13px;cursor:pointer;
+  font-family:var(--sans);position:relative;z-index:2;}
+
+/* history */
+.gacha-history{margin-top:1rem;}
+.gacha-history-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.gacha-history-list{display:flex;flex-wrap:wrap;gap:6px;max-height:120px;overflow-y:auto;}
+.gh-item{font-size:11px;padding:3px 10px;border-radius:8px;border:0.5px solid var(--border2);background:var(--p4);}
+.gh-item.r2{background:#e8f8ed;border-color:rgba(14,155,110,.3);}
+.gh-item.r3{background:#e8effe;border-color:rgba(58,122,255,.3);}
+.gh-item.r4{background:#fff0e8;border-color:rgba(255,106,0,.35);font-weight:500;}
+
+@media print{.gacha-card,.gacha-overlay{display:none;}}
+
+/* ── COUNTDOWN ── */
+.countdown-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:.8rem 0 0;}
+.cd-block{text-align:center;background:var(--surface);border:0.5px solid var(--border2);
+  border-radius:14px;padding:10px 16px;min-width:68px;}
+.cd-num{font-family:var(--serif);font-size:26px;color:var(--p);line-height:1;}
+.cd-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.today-badge{display:inline-block;margin-top:.5rem;font-size:12px;color:var(--muted);
+  background:var(--surface);border:0.5px solid var(--border2);border-radius:20px;padding:4px 14px;}
+.today-badge strong{color:var(--p);}
+
+/* ── GACHA POOL ACCORDION ── */
+.gacha-pool-toggle{width:100%;background:none;border:0.5px solid var(--border2);border-radius:12px;
+  padding:10px 16px;font-size:13px;color:var(--muted);cursor:pointer;text-align:left;
+  font-family:var(--sans);display:flex;justify-content:space-between;align-items:center;
+  margin-top:1rem;transition:background .15s;}
+.gacha-pool-toggle:hover{background:var(--p4);}
+.gacha-pool-toggle .arrow{transition:transform .2s;}
+.gacha-pool-toggle.open .arrow{transform:rotate(180deg);}
+.gacha-pool-body{display:none;margin-top:8px;border:0.5px solid var(--border);border-radius:14px;overflow:hidden;}
+.gacha-pool-body.open{display:block;}
+.gp-section{padding:10px 14px;border-bottom:0.5px solid var(--border);}
+.gp-section:last-child{border-bottom:none;}
+.gp-section-title{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;}
+.gp-items{display:flex;flex-wrap:wrap;gap:6px;}
+.gp-item{font-size:11px;padding:4px 10px;border-radius:8px;}
+.gp-r1{background:#f0eeff;border:0.5px solid var(--border2);}
+.gp-r2{background:#e8f8ed;border:0.5px solid rgba(14,155,110,.2);}
+.gp-r3{background:#e8effe;border:0.5px solid rgba(58,122,255,.2);}
+.gp-r4{background:#fff0e8;border:0.5px solid rgba(255,106,0,.25);font-weight:500;}
+</style>
 </style>
 </head>
 <body>
@@ -337,6 +429,13 @@ td.check-td{text-align:center;}
   <h1><em>夏日保卫战</em> 2026</h1>
   <div class="header-sub">Superhuman Summer Protocol</div>
   <div class="date-range">📅 Jun 15 – Sep 6, 2026 · 84天</div>
+  <div class="today-badge" id="todayBadge">今天是 <strong id="todayStr">--</strong></div>
+  <div class="countdown-bar" id="countdownBar">
+    <div class="cd-block"><div class="cd-num" id="cdDays">--</div><div class="cd-label">天</div></div>
+    <div class="cd-block"><div class="cd-num" id="cdHours">--</div><div class="cd-label">时</div></div>
+    <div class="cd-block"><div class="cd-num" id="cdMins">--</div><div class="cd-label">分</div></div>
+    <div class="cd-block"><div class="cd-num" id="cdSecs">--</div><div class="cd-label">秒</div></div>
+  </div>
 </header>
 
 <!-- USER SWITCHER -->
@@ -449,6 +548,93 @@ td.check-td{text-align:center;}
   </div>
 </div>
 
+<!-- GACHA OVERLAY -->
+<div class="gacha-overlay" id="gachaOverlay">
+  <div class="gacha-stage" id="gachaStage">
+    <canvas id="gachaCanvas"></canvas>
+    <div class="gacha-cards-row" id="gachaCardsRow"></div>
+    <button class="gacha-reveal-all" id="gachaRevealAll" onclick="revealAll()" style="display:none">✨ 全部翻开</button>
+    <button class="gacha-close-btn" id="gachaCloseBtn" onclick="closeGacha()" style="display:none">关闭</button>
+  </div>
+</div>
+
+<!-- GACHA CARD -->
+<div class="gacha-card">
+  <div class="gacha-title">🎴 抽卡池 · 命运转盘</div>
+  <div class="gacha-sub">用XP换抽卡次数 · 单抽8XP · 十连66XP · 抽到积分卡自动返还</div>
+  <div class="gacha-xp-bar">
+    <div class="gacha-xp-user">
+      <div class="gxu-name" id="gachaNameA">用户 A</div>
+      <div class="gxu-val"><span id="gachaAvailA">0</span> XP</div>
+      <div class="gxu-sub">可用积分</div>
+    </div>
+    <div class="gacha-xp-user">
+      <div class="gxu-name" id="gachaNameB">用户 B</div>
+      <div class="gxu-val"><span id="gachaAvailB">0</span> XP</div>
+      <div class="gxu-sub">可用积分</div>
+    </div>
+  </div>
+  <div class="gacha-pity">保底：<span id="pityCount10">0</span>/10 必出⭐⭐ · <span id="pityCount50">0</span>/50 必出⭐⭐⭐⭐</div>
+  <div class="gacha-btns">
+    <button class="gacha-btn gacha-btn-1" id="btnGacha1" onclick="doGacha(1)">单抽<span class="gbcost">8 XP</span></button>
+    <button class="gacha-btn gacha-btn-10" id="btnGacha10" onclick="doGacha(10)">十连<span class="gbcost">66 XP</span></button>
+  </div>
+  <div class="gacha-history">
+    <div class="gacha-history-title" id="gachaHistoryTitle">抽卡记录</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+      <button class="wtab active" id="histTabAll" onclick="setHistTab('all')">全部</button>
+      <button class="wtab" id="histTabA" onclick="setHistTab('A')" id="histTabA">🐑 <span id="histNameA">用户A</span></button>
+      <button class="wtab" id="histTabB" onclick="setHistTab('B')">🦊 <span id="histNameB">用户B</span></button>
+    </div>
+    <div class="gacha-history-list" id="gachaHistory"></div>
+  </div>
+
+  <!-- POOL ACCORDION -->
+  <button class="gacha-pool-toggle" id="poolToggle" onclick="togglePool()">
+    <span>📋 查看完整卡池概率</span>
+    <span class="arrow">▼</span>
+  </button>
+  <div class="gacha-pool-body" id="poolBody">
+    <div class="gp-section">
+      <div class="gp-section-title">⭐ 普通 · 70%</div>
+      <div class="gp-items">
+        <div class="gp-item gp-r1">🛋️ 获得30分钟合法摸鱼时间</div>
+        <div class="gp-item gp-r1">📱 可以多30分钟娱乐</div>
+        <div class="gp-item gp-r1">🎮 可以多60分钟娱乐</div>
+        <div class="gp-item gp-r1">🌙 今晚可以晚睡30分钟</div>
+        <div class="gp-item gp-r1">⭐ 加1积分</div>
+        <div class="gp-item gp-r1">⭐⭐ 加2积分</div>
+        <div class="gp-item gp-r1">⭐⭐⭐ 加3积分</div>
+      </div>
+    </div>
+    <div class="gp-section">
+      <div class="gp-section-title">⭐⭐ 小奖励 · 20% · 保底10连</div>
+      <div class="gp-items">
+        <div class="gp-item gp-r2">🧋 买一杯想喝的奶茶</div>
+        <div class="gp-item gp-r2">🍜 点一次外卖，想吃啥吃啥</div>
+        <div class="gp-item gp-r2">📺 看一集想看的视频</div>
+        <div class="gp-item gp-r2">☕ 今天两人互相不许催对方学习</div>
+      </div>
+    </div>
+    <div class="gp-section">
+      <div class="gp-section-title">⭐⭐⭐ 中奖励 · 8%</div>
+      <div class="gp-items">
+        <div class="gp-item gp-r3">🎬 对方请你喝杯奶茶</div>
+        <div class="gp-item gp-r3">🛍️ 买一件心念的东西（自付≤$40）</div>
+        <div class="gp-item gp-r3">💸 氪金+10（自付转给对方）</div>
+      </div>
+    </div>
+    <div class="gp-section">
+      <div class="gp-section-title">⭐⭐⭐⭐ 大奖励 · 2% · 保底50连</div>
+      <div class="gp-items">
+        <div class="gp-item gp-r4">🏖️ 一整个下午完全自由！</div>
+        <div class="gp-item gp-r4">💰 氪金+100（自付转给对方）</div>
+        <div class="gp-item gp-r4">🎁 对方给你买东西（≤$30）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div><!-- /wrap -->
 
 <script>
@@ -505,8 +691,8 @@ const TODAY = new Date();
 let state = {
   currentUser: 'A',
   names: { A:'用户 A', B:'用户 B' },
-  A: { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set() },
-  B: { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set() },
+  A: { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set(), spent:0, bonusXP:0, pity10:0, pity50:0, gachaHistory:[] },
+  B: { checks:{}, hours:{}, msRewards:{}, msClaimed:new Set(), shownMS:new Set(), spent:0, bonusXP:0, pity10:0, pity50:0, gachaHistory:[] },
 };
 let activeMonthIdx = 0;
 let activeWeekIdx  = 0; // 0=all
@@ -526,11 +712,16 @@ function stateToFirebase() {
   const out = { names: state.names };
   ['A','B'].forEach(u => {
     out[u] = {
-      checks:    state[u].checks,
-      hours:     state[u].hours,
-      msRewards: state[u].msRewards,
-      msClaimed: [...state[u].msClaimed],
-      shownMS:   [...state[u].shownMS],
+      checks:       state[u].checks,
+      hours:        state[u].hours,
+      msRewards:    state[u].msRewards,
+      msClaimed:    [...state[u].msClaimed],
+      shownMS:      [...state[u].shownMS],
+      spent:        state[u].spent    || 0,
+      bonusXP:      state[u].bonusXP  || 0,
+      pity10:       state[u].pity10   || 0,
+      pity50:       state[u].pity50   || 0,
+      gachaHistory: state[u].gachaHistory || [],
     };
   });
   return out;
@@ -541,11 +732,16 @@ function firebaseToState(p) {
   state.names = p.names || state.names;
   ['A','B'].forEach(u => {
     if (p[u]) {
-      state[u].checks    = p[u].checks    || {};
-      state[u].hours     = p[u].hours     || {};
-      state[u].msRewards = p[u].msRewards || {};
-      state[u].msClaimed = new Set(p[u].msClaimed || []);
-      state[u].shownMS   = new Set(p[u].shownMS   || []);
+      state[u].checks       = p[u].checks       || {};
+      state[u].hours        = p[u].hours        || {};
+      state[u].msRewards    = p[u].msRewards    || {};
+      state[u].msClaimed    = new Set(p[u].msClaimed    || []);
+      state[u].shownMS      = new Set(p[u].shownMS      || []);
+      state[u].spent        = p[u].spent        || 0;
+      state[u].bonusXP      = p[u].bonusXP      || 0;
+      state[u].pity10       = p[u].pity10       || 0;
+      state[u].pity50       = p[u].pity50       || 0;
+      state[u].gachaHistory = p[u].gachaHistory || [];
     }
   });
 }
@@ -942,7 +1138,9 @@ function renderXP() {
   document.getElementById('xpBreakdown').innerHTML=
     `<span>习惯打卡 <strong>+${xp.habitXP} XP</strong></span>`+
     `<span>学习时长 <strong>+${xp.studyXP} XP</strong></span>`+
-    `<span>本月总计 <strong style="color:var(--p)">${total} / 1700 XP</strong></span>`;
+    `<span>抽卡返还 <strong>+${state[u].bonusXP||0} XP</strong></span>`+
+    `<span>总计 <strong style="color:var(--p)">${total} / 1700 XP</strong></span>`+
+    `<span>可用积分 <strong style="color:var(--gold)">${availXP(u)} XP</strong></span>`;
 
   // milestones
   const ud=state[u];
@@ -1003,6 +1201,233 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),3500);
 }
 
+// ─── AVAILABLE XP ─────────────────────────────────────────────────────────────
+function availXP(u) {
+  return Math.max(0, userXP(u).total + (state[u].bonusXP||0) - (state[u].spent||0));
+}
+
+// ─── GACHA POOL ───────────────────────────────────────────────────────────────
+const GACHA_POOL = [
+  // rarity 1 ⭐ 70%
+  { r:1, emoji:'🛋️', name:'获得30分钟合法摸鱼时间' },
+  { r:1, emoji:'📱', name:'可以多30分钟娱乐' },
+  { r:1, emoji:'🎮', name:'可以多60分钟娱乐' },
+  { r:1, emoji:'🌙', name:'今晚可以晚睡30分钟' },
+  { r:1, emoji:'⭐', name:'加1积分', bonus:1 },
+  { r:1, emoji:'⭐⭐', name:'加2积分', bonus:2 },
+  { r:1, emoji:'⭐⭐⭐', name:'加3积分', bonus:3 },
+  // rarity 2 ⭐⭐ 20%
+  { r:2, emoji:'🧋', name:'买一杯想喝的奶茶' },
+  { r:2, emoji:'🍜', name:'点一次外卖，想吃啥吃啥' },
+  { r:2, emoji:'📺', name:'看一集想看的视频' },
+  { r:2, emoji:'☕', name:'今天两人互相不许催对方学习' },
+  // rarity 3 ⭐⭐⭐ 8%
+  { r:3, emoji:'🎬', name:'对方请你喝杯奶茶🧋' },
+  { r:3, emoji:'🛍️', name:'买一件心念的东西（自付≤$40）' },
+  { r:3, emoji:'💸', name:'氪金+10（自付，转给对方截图）' },
+  // rarity 4 ⭐⭐⭐⭐ 2%
+  { r:4, emoji:'🏖️', name:'一整个下午完全自由！不学不碰research' },
+  { r:4, emoji:'💰', name:'氪金+100（自付，转给对方截图）' },
+  { r:4, emoji:'🎁', name:'对方给你买一件想要的东西（≤$30）' },
+];
+
+const RARITY_WEIGHTS = [70, 20, 8, 2]; // must sum to 100
+
+function drawOne(ud) {
+  ud.pity10 = (ud.pity10||0) + 1;
+  ud.pity50 = (ud.pity50||0) + 1;
+
+  let rarity;
+  // pity overrides
+  if (ud.pity50 >= 50) { rarity = 4; ud.pity50 = 0; ud.pity10 = 0; }
+  else if (ud.pity10 >= 10) { rarity = 2; ud.pity10 = 0; }
+  else {
+    const roll = Math.random() * 100;
+    if (roll < 2)  { rarity = 4; ud.pity50 = 0; ud.pity10 = 0; }
+    else if (roll < 10) { rarity = 3; }
+    else if (roll < 30) { rarity = 2; ud.pity10 = 0; }
+    else rarity = 1;
+  }
+  const pool = GACHA_POOL.filter(c => c.r === rarity);
+  const card = pool[Math.floor(Math.random() * pool.length)];
+  // apply bonus XP if card has it
+  if (card.bonus) ud.bonusXP = (ud.bonusXP||0) + card.bonus;
+  return card;
+}
+
+function doGacha(n) {
+  const u = state.currentUser;
+  const cost = n === 1 ? 8 : 66;
+  if (availXP(u) < cost) { showToast('❌ XP不够！先去打卡赚积分！'); return; }
+  state[u].spent = (state[u].spent||0) + cost;
+  const results = [];
+  for (let i=0; i<n; i++) results.push(drawOne(state[u]));
+  // add to history (keep last 30)
+  const ts = new Date().toLocaleDateString('zh-CN',{month:'numeric',day:'numeric'});
+  results.forEach(c => {
+    state[u].gachaHistory.unshift({ r:c.r, name:c.name, emoji:c.emoji, ts });
+  });
+  if (state[u].gachaHistory.length > 30) state[u].gachaHistory = state[u].gachaHistory.slice(0,30);
+  saveProgress();
+  render();
+  showGachaAnimation(results);
+}
+
+// ─── GACHA ANIMATION ──────────────────────────────────────────────────────────
+let particleAnim = null;
+let particles = [];
+
+function showGachaAnimation(results) {
+  const overlay = document.getElementById('gachaOverlay');
+  const row = document.getElementById('gachaCardsRow');
+  const revealBtn = document.getElementById('gachaRevealAll');
+  const closeBtn = document.getElementById('gachaCloseBtn');
+  overlay.classList.add('show');
+  revealBtn.style.display = 'none';
+  closeBtn.style.display = 'none';
+
+  // build cards
+  row.innerHTML = results.map((c,i) => `
+    <div class="gacha-result-card rarity-${c.r}" id="gc${i}">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="cf-stars">${'⭐'.repeat(c.r)}</div>
+          <div class="cf-emoji">${c.emoji}</div>
+          <div class="cf-name">${c.name}</div>
+        </div>
+        <div class="card-back"><div class="card-back-star">✦</div></div>
+      </div>
+    </div>`).join('');
+
+  // particles canvas
+  const canvas = document.getElementById('gachaCanvas');
+  const stage = document.getElementById('gachaStage');
+  canvas.width = stage.offsetWidth || 340;
+  canvas.height = stage.offsetHeight || 460;
+  particles = [];
+  startParticles(canvas, results);
+
+  // auto-reveal one by one
+  if (results.length === 1) {
+    setTimeout(() => {
+      document.getElementById('gc0').classList.add('revealed');
+      spawnBurst(canvas, results[0]);
+      setTimeout(() => { closeBtn.style.display='block'; }, 600);
+    }, 400);
+  } else {
+    // show reveal-all button after cards appear
+    setTimeout(() => { revealBtn.style.display='block'; }, 500);
+    // clicking individual card reveals it
+    results.forEach((_,i) => {
+      document.getElementById(`gc${i}`).addEventListener('click', () => {
+        document.getElementById(`gc${i}`).classList.add('revealed');
+        spawnBurst(canvas, results[i]);
+        const allRevealed = results.every((_,j) => document.getElementById(`gc${j}`)?.classList.contains('revealed'));
+        if (allRevealed) { revealBtn.style.display='none'; setTimeout(()=>{closeBtn.style.display='block';},400); }
+      });
+    });
+  }
+}
+
+function revealAll() {
+  const cards = document.querySelectorAll('.gacha-result-card');
+  const canvas = document.getElementById('gachaCanvas');
+  cards.forEach((c,i) => {
+    setTimeout(() => {
+      c.classList.add('revealed');
+    }, i * 120);
+  });
+  document.getElementById('gachaRevealAll').style.display = 'none';
+  setTimeout(() => { document.getElementById('gachaCloseBtn').style.display='block'; }, cards.length*120+400);
+}
+
+function closeGacha() {
+  document.getElementById('gachaOverlay').classList.remove('show');
+  if (particleAnim) { cancelAnimationFrame(particleAnim); particleAnim=null; }
+  particles = [];
+}
+
+// particle system
+function startParticles(canvas, results) {
+  const maxR = Math.max(...results.map(c=>c.r));
+  const ctx = canvas.getContext('2d');
+  const colors = ['#a89fff','#FFD966','#ff8b6b','#7fc8ff','#b8ffb0'];
+  function spawn() {
+    for (let i=0; i<(maxR>=4?3:1); i++) {
+      particles.push({
+        x: Math.random()*canvas.width, y: canvas.height+10,
+        vx: (Math.random()-0.5)*2, vy: -(2+Math.random()*3),
+        r: 2+Math.random()*3,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        life: 1, decay: 0.008+Math.random()*0.01,
+      });
+    }
+  }
+  let spawnTimer = 0;
+  function loop() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    spawnTimer++;
+    if (spawnTimer%3===0) spawn();
+    particles = particles.filter(p=>p.life>0);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.04; p.life-=p.decay;
+      ctx.globalAlpha=p.life;
+      ctx.fillStyle=p.color;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    particleAnim = requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function spawnBurst(canvas, card) {
+  const colors = card.r>=4 ? ['#FFD966','#ff8b6b','#fff','#ffa0ff'] : ['#a89fff','#7fc8ff','#b8ffb0'];
+  const cx=canvas.width/2, cy=canvas.height/2;
+  for (let i=0; i<(card.r*8); i++) {
+    const angle=Math.random()*Math.PI*2;
+    const speed=2+Math.random()*5;
+    particles.push({
+      x:cx, y:cy,
+      vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+      r:2+Math.random()*4,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      life:1, decay:0.02+Math.random()*0.02,
+    });
+  }
+}
+
+// ─── GACHA RENDER ─────────────────────────────────────────────────────────────
+function renderGacha() {
+  ['A','B'].forEach(u => {
+    document.getElementById(`gachaName${u}`).textContent = state.names[u];
+    document.getElementById(`gachaAvail${u}`).textContent = availXP(u);
+  });
+  const ud = state[state.currentUser];
+  document.getElementById('pityCount10').textContent = ud.pity10||0;
+  document.getElementById('pityCount50').textContent = ud.pity50||0;
+  const avail = availXP(state.currentUser);
+  document.getElementById('btnGacha1').disabled  = avail < 8;
+  document.getElementById('btnGacha10').disabled = avail < 66;
+  // update history tab labels
+  document.getElementById('histNameA').textContent = state.names.A;
+  document.getElementById('histNameB').textContent = state.names.B;
+  // history by tab
+  let histItems = [];
+  if (histTab === 'all') {
+    const aHist = (state.A.gachaHistory||[]).map(h=>({...h,user:state.names.A,ukey:'A'}));
+    const bHist = (state.B.gachaHistory||[]).map(h=>({...h,user:state.names.B,ukey:'B'}));
+    histItems = [...aHist, ...bHist].sort((a,b)=>0).slice(0,24);
+  } else {
+    histItems = (state[histTab].gachaHistory||[]).slice(0,24).map(h=>({...h,user:state.names[histTab],ukey:histTab}));
+  }
+  const avatars = {A:'🐑',B:'🦊'};
+  document.getElementById('gachaHistory').innerHTML =
+    histItems.length ? histItems.map(h =>
+      `<div class="gh-item r${h.r}">${avatars[h.ukey]||''} ${h.emoji} ${h.name} <span style="opacity:.5">${h.ts}</span></div>`
+    ).join('') : '<span style="font-size:11px;color:var(--light)">还没有记录，快去抽！</span>';
+}
+
 // ─── MAIN RENDER ──────────────────────────────────────────────────────────────
 function render() {
   renderDuel();
@@ -1012,6 +1437,56 @@ function render() {
   renderChart();
   renderHeatmap();
   renderXP();
+  renderGacha();
+}
+
+// ─── COUNTDOWN ────────────────────────────────────────────────────────────────
+const END_DATE = new Date(2026, 8, 6, 23, 59, 59); // Sep 6 2026
+const WEEKDAYS_ZH = ['周日','周一','周二','周三','周四','周五','周六'];
+const MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function updateCountdown() {
+  const now = new Date();
+  // today string
+  const dow = WEEKDAYS_ZH[now.getDay()];
+  const mo = MONTHS_EN[now.getMonth()];
+  const todayStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${dow}`;
+  document.getElementById('todayStr').textContent = todayStr;
+  // countdown
+  const diff = END_DATE - now;
+  if (diff <= 0) {
+    document.getElementById('countdownBar').innerHTML = '<div style="font-size:20px;color:var(--p)">🎉 夏日保卫战结束！</div>';
+    return;
+  }
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000)  / 60000);
+  const secs  = Math.floor((diff % 60000)    / 1000);
+  document.getElementById('cdDays').textContent  = days;
+  document.getElementById('cdHours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cdMins').textContent  = String(mins).padStart(2,'0');
+  document.getElementById('cdSecs').textContent  = String(secs).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ─── HISTORY TAB ──────────────────────────────────────────────────────────────
+let histTab = 'all';
+function setHistTab(t) {
+  histTab = t;
+  ['all','A','B'].forEach(k => {
+    const el = document.getElementById(`histTab${k === 'all' ? 'All' : k}`);
+    if (el) el.classList.toggle('active', k === t);
+  });
+  renderGacha();
+}
+
+// ─── POOL ACCORDION ───────────────────────────────────────────────────────────
+function togglePool() {
+  const btn  = document.getElementById('poolToggle');
+  const body = document.getElementById('poolBody');
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
 }
 
 // ─── BANNER ───────────────────────────────────────────────────────────────────
